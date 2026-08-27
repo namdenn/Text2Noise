@@ -129,8 +129,6 @@ For the speech-enhancement demo, download the [speech-model checkpoint](https://
 
 The score-model implementation is adapted from [SGMSE](https://github.com/sp-uhh/sgmse). Parts of the speech-enhancement stack build on the referenced DiffUSE/UDiffSE research code, and the audio-visual utilities include AV-HuBERT/fairseq-derived components. See the source-file headers for method-specific papers and upstream attributions.
 
-Developed for research within the MULTISPEECH team at Inria Nancy.
-
 ## License
 
 No project-level license has been selected yet. Add a license before inviting reuse or redistribution, and verify the licenses of upstream code, datasets, checkpoints, and model weights separately.
