@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Models, checkpoints, and experiment logs
+*.ckpt
+*.pth
+*.pth.tar
+*.pt
+checkpoints/
+logs/
+wandb/
+OUT/
+
+# Datasets and generated metadata
+data/
+data_demo/
+metadata/
+metadata_*/
+sgmse/metadata/
+sgmse/metadata_*/
+sgmse/conette_metadata_*/
+
+# Generated output and evaluation artifacts
+outputs/
+eval/result/
+recovery_results*/
+
+# Local legacy files retained outside the GitHub publication
+/README copy.md
+/.gitlab-ci.yml
+sgmse/util/av_hubert/avhubert/avhubert_vsr_c.ipynb
