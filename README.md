@@ -2,7 +2,7 @@
 
 Research code for two related audio tasks:
 
-1. **Text-to-Noise** — train conditional score or flow-matching models and generate noise from class labels or free-form captions.
+1. **Text-to-Noise** — train conditional score models and generate noise from class labels or free-form captions.
 2. **Speech Enhancement** — separate speech and noise from a noisy mixture using a speech prior together with one of the trained noise priors.
 
 The repository keeps the shared model code in one place and exposes each experimental version through a dedicated Git branch. Model checkpoints, datasets, generated results, and account credentials are intentionally not included.
@@ -13,16 +13,15 @@ The repository keeps the shared model code in one place and exposes each experim
 | --- | --- | --- | --- |
 | v1 (default) | Stored text embeddings | `run_conditioned_pipeline.sh`, `inference.py`, `eval/evaluation.py` | `main` |
 | CoNeTTE | Descriptive CoNeTTE captions | `run_conditioned_pipeline_conette.sh`, `inference_conette.py`, `eval/evaluation_conette.py` | `versions/conette` |
-| Flow Matching | Optimal-transport flow matching | `run_conditioned_pipeline_fm.sh`, `train_fm.py` | `versions/flow-matching` |
 
-There are exactly three maintained branches. `main` is the v1 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment. Version-specific launchers, training modules, data modules, and evaluation entrypoints exist only on their corresponding branch. The `demo/` directory and the speech-enhancement notebook are preserved on all three branches.
+There are exactly two maintained branches. `main` is the v1 implementation, and `versions/conette` contains the CoNeTTE-conditioned implementation. Version-specific launchers, training modules, data modules, and evaluation entrypoints exist only on their corresponding branch. The `demo/` directory and the speech-enhancement notebook are preserved on both branches.
 
 ## Repository layout
 
 ```text
 .
 ├── inference*.py              # Text-to-Noise inference entrypoints
-├── train.py / train_fm.py     # Score-model and flow-matching training
+├── train.py                   # Score-model training
 ├── run_*pipeline*.sh          # Text-to-Noise launchers
 ├── eval/                      # Speech-enhancement evaluation and launchers
 ├── sgmse/                     # Data, SDE, score-model, backbone, and AV utilities
@@ -65,7 +64,7 @@ The example file documents the values required by each launcher. Keep all machin
 
 There are two separate demos:
 
-1. **Noise generation:** use the inference script provided by the selected branch. On `main`, run `inference.py`; on `versions/conette`, run `inference_conette.py`. The flow-matching branch contains its training implementation but no separate inference script.
+1. **Noise generation:** use the inference script provided by the selected branch. On `main`, run `inference.py`; on `versions/conette`, run `inference_conette.py`.
 2. **Speech enhancement:** use `demo.ipynb`. The notebook combines a speech-prior checkpoint with a branch-compatible noise checkpoint to separate a noisy mixture into speech and noise.
 
 The following example runs the v1 noise-generation demo without placing local paths in the repository:
