@@ -8,7 +8,7 @@ fi
 
 if ! command -v oarsub >/dev/null 2>&1; then
     echo "Error: oarsub is not available on host $(hostname)." >&2
-    echo "Submit this script from the Nancy frontend." >&2
+    echo "Submit this script from a configured cluster frontend." >&2
     exit 127
 fi
 
@@ -25,7 +25,7 @@ fi
 
 gpus="${GPUS:-1}"
 walltime="${WALLTIME:-24:00:00}"
-cluster_filter="${CLUSTER_FILTER:-cluster in ('gruss')}"
+cluster_filter="${CLUSTER_FILTER:-gpu='YES'}"
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 project_root="${PROJ_ROOT:-$(cd -- "$script_dir/.." && pwd)}"
 

@@ -3,7 +3,7 @@ set -euo pipefail
 
 if ! command -v oarsub >/dev/null 2>&1; then
   echo "Error: oarsub is not available on host $(hostname)." >&2
-  echo "Run this launcher from the Nancy frontend, not from a compute node." >&2
+  echo "Run this launcher from a configured cluster frontend." >&2
   echo "Inside an OAR job, run: bash eval/SE_eval.sh [SEGMENT TOTAL_SEGMENTS]" >&2
   exit 127
 fi

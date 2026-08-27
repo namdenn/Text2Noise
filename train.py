@@ -36,7 +36,7 @@ if __name__ == "__main__":
         parser_.add_argument("--sde", type=str, choices=SDERegistry.get_all_names(), default="ouve")
         # parser_.add_argument("--no_wandb", action="store_true", default=True) # Default to True to bypass WandB
         parser_.add_argument("--run_id", type=str, default="None")
-        parser_.add_argument("--wandb_project", type=str, default="se-smd")
+        parser_.add_argument("--wandb_project", type=str, default="audio-modeling")
 
     temp_args, _ = base_parser.parse_known_args()
 
