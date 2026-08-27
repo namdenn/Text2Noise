@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run speech enhancement with stored v3 Conette text conditions."""
+"""Run speech enhancement with stored CoNeTTE text conditions."""
 
 import argparse
 import csv
@@ -42,8 +42,8 @@ NOISE_PATH_FIELDS = (
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
-            "Evaluate speech enhancement with the v3 noise prior using stored "
-            "Conette-caption embeddings."
+            "Evaluate speech enhancement with the CoNeTTE noise prior using stored "
+            "CoNeTTE-caption embeddings."
         )
     )
     parser.add_argument("--segment", type=int, default=-1)
@@ -55,14 +55,14 @@ def parse_args():
     parser.add_argument(
         "--ckpt_noise_path",
         required=True,
-        help="v3 text-conditioned noise checkpoint",
+        help="CoNeTTE text-conditioned noise checkpoint",
     )
     parser.add_argument(
         "--metadata-jsonl",
         "--metadata_jsonl",
         dest="metadata_jsonl",
         required=True,
-        help="Encoded v3 JSONL containing Conette captions and stored embeddings",
+        help="Encoded CoNeTTE JSONL containing CoNeTTE captions and stored embeddings",
     )
     parser.add_argument(
         "--condition-selection",
@@ -79,7 +79,7 @@ def parse_args():
         default="separate_paradiffuseen",
         choices=("separate_paradiffuseen",),
     )
-    parser.add_argument("--tag", default="v3_conette_stored_embeddings")
+    parser.add_argument("--tag", default="CoNeTTE_conette_stored_embeddings")
     parser.add_argument("--data_dir", required=True)
     parser.add_argument("--clean_root", required=True)
     parser.add_argument("--noisy_root", required=True)
@@ -121,7 +121,7 @@ def get_caption(record, line_number, metadata_path):
         if record.get(key):
             return str(record[key]).strip()
     raise ValueError(
-        f"Metadata row {line_number} in {metadata_path} has no Conette caption"
+        f"Metadata row {line_number} in {metadata_path} has no CoNeTTE caption"
     )
 
 
@@ -144,7 +144,7 @@ def infer_metadata_noise_type(record, known_noise_types):
 
 
 def metadata_identity(wav_path, noise_type):
-    """Build the identity shared by v3 metadata and ntcd_timit.json."""
+    """Build the identity shared by stored metadata and the evaluation manifest."""
     path_parts = [
         token
         for token in str(wav_path).replace("\\", "/").split("/")
@@ -167,7 +167,7 @@ def evaluation_identity(record):
     suffix = f"_{noise_type}_{speaker_id}"
     if not utterance_name.lower().endswith(suffix):
         raise ValueError(
-            f"Cannot derive a v3 metadata identity from utt_name "
+            f"Cannot derive a CoNeTTE metadata identity from utt_name "
             f"{utterance_name!r}, noise_type {record['noise_type']!r}, and "
             f"p_id {record['p_id']!r}"
         )
@@ -178,7 +178,7 @@ def evaluation_identity(record):
 
 
 def load_conette_catalog(metadata_path, noise_types):
-    """Load v3 rows and index their stored conditions by path and noise class."""
+    """Load CoNeTTE rows and index their stored conditions by path and noise class."""
     known_noise_types = {normalize_noise_type(value) for value in noise_types}
     by_path = {}
     by_basename = {}
@@ -220,7 +220,7 @@ def load_conette_catalog(metadata_path, noise_types):
             normalized_path = normalize_audio_path(condition["wav_path"])
             if normalized_path in by_path:
                 raise ValueError(
-                    f"Duplicate v3 metadata audio path: {condition['wav_path']}"
+                    f"Duplicate CoNeTTE metadata audio path: {condition['wav_path']}"
                 )
             by_path[normalized_path] = condition
             basename = os.path.basename(normalized_path)
@@ -235,13 +235,13 @@ def load_conette_catalog(metadata_path, noise_types):
                 identity = metadata_identity(condition["wav_path"], noise_type)
                 if identity in by_identity:
                     raise ValueError(
-                        "Duplicate v3 metadata identity "
+                        "Duplicate CoNeTTE metadata identity "
                         f"{identity}: {condition['wav_path']}"
                     )
                 by_identity[identity] = condition
 
     if not by_path:
-        raise ValueError(f"No stored v3 conditions were found in {metadata_path}")
+        raise ValueError(f"No stored CoNeTTE conditions were found in {metadata_path}")
 
     missing_classes = sorted(
         noise_type
@@ -250,7 +250,7 @@ def load_conette_catalog(metadata_path, noise_types):
     )
     if missing_classes:
         raise ValueError(
-            "Could not find v3 metadata rows for evaluation noise classes: "
+            "Could not find CoNeTTE metadata rows for evaluation noise classes: "
             f"{missing_classes}. The class must appear in a metadata field or "
             "as a directory in wav_path."
         )
@@ -268,7 +268,7 @@ def load_conette_catalog(metadata_path, noise_types):
         for noise_type in sorted(by_noise_type)
     )
     print(
-        f"Loaded {len(by_path)} stored v3 Conette conditions from {metadata_path} "
+        f"Loaded {len(by_path)} stored CoNeTTE conditions from {metadata_path} "
         f"({counts}; exact identities={len(by_identity)}; "
         f"unclassified={unclassified})"
     )
@@ -320,7 +320,7 @@ def select_condition(catalog, record_key, record, selection, metadata_path):
     candidates = catalog["by_noise_type"].get(noise_type, [])
     if not candidates:
         raise ValueError(
-            f"No stored v3 Conette conditions are available for {noise_type!r}"
+            f"No stored CoNeTTE conditions are available for {noise_type!r}"
         )
     digest = hashlib.sha256(str(record_key).encode("utf-8")).digest()
     condition_index = int.from_bytes(digest[:8], "big") % len(candidates)
@@ -372,8 +372,8 @@ def evaluate(args):
     for path, label in (
         (args.data_dir, "evaluation JSON"),
         (args.ckpt_path, "speech checkpoint"),
-        (args.ckpt_noise_path, "v3 noise checkpoint"),
-        (args.metadata_jsonl, "encoded v3 Conette metadata"),
+        (args.ckpt_noise_path, "CoNeTTE noise checkpoint"),
+        (args.metadata_jsonl, "encoded CoNeTTE metadata"),
     ):
         require_file(path, label)
 
@@ -424,7 +424,7 @@ def evaluate(args):
     rtf_path = save_dir / f"rtf{suffix}.csv"
     condition_audit_path = save_dir / f"conditions{suffix}.csv"
 
-    for record_key, record in tqdm(selected_records, desc="v3 speech enhancement"):
+    for record_key, record in tqdm(selected_records, desc="CoNeTTE speech enhancement"):
         output_path = enhanced_dir / f"{record['utt_name']}.wav"
         if output_path.exists() and not args.overwrite:
             continue

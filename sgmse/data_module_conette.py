@@ -114,13 +114,13 @@ def encode_metadata_offline(input_dir, output_dir):
 
 if __name__ == "__main__":
     INPUT_METADATA_DIR = os.environ.get(
-        "CONETTE_METADATA_DIR",
-        "sgmse/conette_metadata_combination",
+        "METADATA_INPUT_DIR",
+        "generated/metadata/input",
     )
     
     OUTPUT_ENCODED_DIR = os.environ.get(
-        "CONETTE_ENCODED_DIR",
-        "sgmse/conette_metadata_combination_encoded",
+        "METADATA_OUTPUT_DIR",
+        "generated/metadata/encoded",
     )
     
     encode_metadata_offline(

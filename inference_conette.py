@@ -19,11 +19,11 @@ from src import InferenceAlgoRegistry
 DEFAULT_DIFFUSION_CHECKPOINT = (
     os.environ.get(
         "DIFFUSION_CHECKPOINT",
-        "logs/v3_22_07_2026/last.ckpt",
+        "checkpoints/noise_model.ckpt",
     )
 )
 DEFAULT_OUTPUT_DIR = (
-    os.environ.get("OUTPUT_DIR", "outputs/text_to_noise_v3_conette")
+    os.environ.get("OUTPUT_DIR", "outputs/noise_generation")
 )
 
 
@@ -43,7 +43,7 @@ def encode_prompt(prompt, checkpoint_path, device):
 
 
 def load_metadata_condition(jsonl_path, record_index, device):
-    """Load an exact v3 training condition for an in-distribution smoke test."""
+    """Load an exact training condition for an in-distribution smoke test."""
     if record_index < 0:
         raise ValueError("metadata-index must be non-negative")
 
@@ -105,26 +105,26 @@ def safe_filename(text):
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Generate noise from the v3 model trained on Conette captions"
+        description="Generate noise from the model trained on CoNeTTE captions"
     )
     parser.add_argument(
         "--prompt",
         default="A crowd of people are talking in a busy indoor space.",
-        help="Use a descriptive Conette-style caption, not a short class label",
+        help="Use a descriptive CoNeTTE-style caption, not a short class label",
     )
     parser.add_argument(
         "--metadata-jsonl",
         default=None,
         help=(
-            "Optional encoded Conette JSONL. When provided, the stored embedding "
-            "is used directly to test the v3 model without re-encoding text."
+            "Optional encoded CoNeTTE JSONL. When provided, the stored embedding "
+            "is used directly without re-encoding text."
         ),
     )
     parser.add_argument("--metadata-index", type=int, default=0)
     parser.add_argument(
         "--text-checkpoint",
         default=DEFAULT_TEXT_ENCODER_CHECKPOINT,
-        help="The exact text checkpoint used to encode the Conette metadata",
+        help="The exact text checkpoint used to encode the CoNeTTE metadata",
     )
     parser.add_argument(
         "--diffusion-checkpoint",
@@ -160,15 +160,15 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if not os.path.isfile(args.diffusion_checkpoint):
         raise FileNotFoundError(
-            f"v3 diffusion checkpoint not found: {args.diffusion_checkpoint}"
+            f"Diffusion checkpoint not found: {args.diffusion_checkpoint}"
         )
     if args.metadata_jsonl and not os.path.isfile(args.metadata_jsonl):
         raise FileNotFoundError(
-            f"Encoded Conette metadata not found: {args.metadata_jsonl}"
+            f"Encoded CoNeTTE metadata not found: {args.metadata_jsonl}"
         )
     if not args.metadata_jsonl and not os.path.isfile(args.text_checkpoint):
         raise FileNotFoundError(
-            f"Conette text encoder checkpoint not found: {args.text_checkpoint}"
+            f"CoNeTTE text encoder checkpoint not found: {args.text_checkpoint}"
         )
     os.makedirs(args.output_dir, exist_ok=True)
 

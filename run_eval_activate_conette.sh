@@ -14,8 +14,8 @@ cd "$PROJ_ROOT"
 TOTAL_SEGMENTS="${TOTAL_SEGMENTS:-10}"
 
 for ((segment_id = 0; segment_id < TOTAL_SEGMENTS; segment_id++)); do
-    echo "Running v3 evaluation segment ${segment_id}/${TOTAL_SEGMENTS}"
-    bash eval/SE_eval_v3.sh "$segment_id" "$TOTAL_SEGMENTS"
+    echo "Running CoNeTTE evaluation segment ${segment_id}/${TOTAL_SEGMENTS}"
+    bash eval/SE_eval_conette.sh "$segment_id" "$TOTAL_SEGMENTS"
 done
 
-echo "All ${TOTAL_SEGMENTS} v3 evaluation segments completed."
+echo "All ${TOTAL_SEGMENTS} CoNeTTE evaluation segments completed."

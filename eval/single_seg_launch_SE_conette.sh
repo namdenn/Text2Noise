@@ -8,7 +8,7 @@ fi
 
 if ! command -v oarsub >/dev/null 2>&1; then
     echo "Error: oarsub is not available on host $(hostname)." >&2
-    echo "Submit this script from the Nancy frontend (fnancy)." >&2
+    echo "Submit this script from a configured cluster frontend." >&2
     exit 127
 fi
 
@@ -25,15 +25,15 @@ fi
 
 GPUS="${GPUS:-1}"
 WALLTIME="${WALLTIME:-24:00:00}"
-CLUSTER_FILTER="${CLUSTER_FILTER:-cluster in ('gruss')}"
+CLUSTER_FILTER="${CLUSTER_FILTER:-gpu='YES'}"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PROJ_ROOT="${PROJ_ROOT:-$(cd -- "$SCRIPT_DIR/.." && pwd)}"
 
-OUT_DIR="${OUT_DIR:-OUT/v3}"
+OUT_DIR="${OUT_DIR:-OUT/conette}"
 mkdir -p "$OUT_DIR"
 
-JOB_COMMAND="bash '$PROJ_ROOT/eval/SE_eval_v3.sh' '$SEGMENT_ID' '$TOTAL_SEGMENTS'"
-echo "Submitting v3 segment ${SEGMENT_ID}/${TOTAL_SEGMENTS}"
+JOB_COMMAND="bash '$PROJ_ROOT/eval/SE_eval_conette.sh' '$SEGMENT_ID' '$TOTAL_SEGMENTS'"
+echo "Submitting CoNeTTE segment ${SEGMENT_ID}/${TOTAL_SEGMENTS}"
 echo "Job command: $JOB_COMMAND"
 
 oarsub \
@@ -41,6 +41,6 @@ oarsub \
     -p "$CLUSTER_FILTER" \
     -q production \
     -l "nodes=1/gpu=$GPUS,walltime=$WALLTIME" \
-    -O "$OUT_DIR/oar_v3.%jobid%.output" \
-    -E "$OUT_DIR/oar_v3.%jobid%.error" \
+    -O "$OUT_DIR/oar_conette.%jobid%.output" \
+    -E "$OUT_DIR/oar_conette.%jobid%.error" \
     "$JOB_COMMAND"
