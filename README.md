@@ -2,24 +2,20 @@
 
 Research code for two related audio tasks:
 
-1. **Text-to-Noise** — train conditional score or flow-matching models and generate noise from class labels, free-form captions, or CLAP audio embeddings.
+1. **Text-to-Noise** — train conditional score or flow-matching models and generate noise from class labels or free-form captions.
 2. **Speech Enhancement** — separate speech and noise from a noisy mixture using a speech prior together with one of the trained noise priors.
 
 The repository keeps the shared model code in one place and exposes each experimental version through a dedicated Git branch. Model checkpoints, corpora, generated results, and account credentials are intentionally not included.
 
 ## Version branches
 
-| Task | Version | Conditioning / method | Main entrypoints | Branch |
-| --- | --- | --- | --- | --- |
-| Text-to-Noise | v1 | Combined noise dataset | `run_cont_pipeline.sh`, `run_pipeline.sh` | `versions/text-to-noise-v1` |
-| Text-to-Noise | v2 | RoBERTa/AudioLDM text embeddings | `run_conditioned_pipeline.sh`, `inference.py` | `versions/text-to-noise-v2` |
-| Text-to-Noise | v3 | CoNeTTE captions | `run_conditioned_pipeline_conette.sh`, `inference_conette.py` | `versions/text-to-noise-v3-conette` |
-| Text-to-Noise | v4 | Optimal-transport flow matching | `run_conditioned_pipeline_fm.sh`, `train_fm.py` | `versions/text-to-noise-v4-flow-matching` |
-| Text-to-Noise | v5 | CLAP audio embeddings | `run_conditioned_pipeline_v5.sh`, `inference_v5.py` | `versions/text-to-noise-v5-clap` |
-| Speech Enhancement | v2 | v2 text-conditioned noise prior | `eval/SE_eval.sh`, `eval/evaluation.py` | `versions/speech-enhancement-v2` |
-| Speech Enhancement | v3 | v3 CoNeTTE noise prior | `eval/SE_eval_v3.sh`, `eval/evaluation_v3.py` | `versions/speech-enhancement-v3-conette` |
+| Version | Conditioning / method | Main entrypoints | Branch |
+| --- | --- | --- | --- |
+| v2 (default) | RoBERTa/AudioLDM text embeddings | `run_conditioned_pipeline.sh`, `inference.py`, `eval/evaluation.py` | `main` |
+| CoNeTTE | Descriptive CoNeTTE captions | `run_conditioned_pipeline_conette.sh`, `inference_conette.py`, `eval/evaluation_v3.py` | `versions/conette` |
+| Flow Matching | Optimal-transport flow matching | `run_conditioned_pipeline_fm.sh`, `train_fm.py` | `versions/flow-matching` |
 
-`main` contains the consolidated research workspace. A version branch adds a short `VERSION.md` guide for that exact experiment while retaining the shared implementation needed to run it.
+There are exactly three maintained branches. `main` is the v2 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment.
 
 ## Repository layout
 
@@ -67,7 +63,7 @@ Important variables are:
 
 - `CONDA_INIT` and `CONDA_ENV_PATH` for shell launchers that use Conda.
 - `CORPUS_ROOT` for the Text-to-Noise corpus.
-- `TEXT_ENCODER_CHECKPOINT` for v2/v3 text conditioning.
+- `TEXT_ENCODER_CHECKPOINT` for v2 and CoNeTTE text conditioning.
 - `SPEECH_CKPT`, `NOISY_ROOT`, and `CLEAN_ROOT` for speech enhancement.
 - `WANDB_API_KEY` for online experiment logging. Set it only in your shell or `.env`; never place it in a tracked script.
 
@@ -87,10 +83,10 @@ $CORPUS_ROOT/
 └── white/{train,val,test}/**/*.wav
 ```
 
-Select the version branch and run its launcher. For example, v2:
+The default `main` branch is v2:
 
 ```bash
-git switch versions/text-to-noise-v2
+git switch main
 bash run_conditioned_pipeline.sh
 ```
 
@@ -104,7 +100,7 @@ python inference.py \
   --output-dir outputs/text_to_noise_v2
 ```
 
-For v3, use `inference_conette.py` with a descriptive caption. For v5, use `inference_v5.py --help` to provide a CLAP-conditioned checkpoint and prompt. The v4 branch currently provides the flow-matching training path; it does not introduce a separate inference entrypoint.
+For the caption-conditioned model, switch to `versions/conette` and use `inference_conette.py` with a descriptive caption. The `versions/flow-matching` branch provides the flow-matching training path; it does not introduce a separate inference entrypoint.
 
 ## Task 2: Speech Enhancement
 
@@ -119,14 +115,14 @@ export CLEAN_ROOT=/path/to/clean_eval_corpus
 Run v2 locally in ten segments:
 
 ```bash
-git switch versions/speech-enhancement-v2
+git switch main
 TOTAL_SEGMENTS=10 bash run_eval_activate.sh
 ```
 
-Run v3/CoNeTTE in the same way:
+Run CoNeTTE-based speech enhancement from its model branch:
 
 ```bash
-git switch versions/speech-enhancement-v3-conette
+git switch versions/conette
 TOTAL_SEGMENTS=10 bash run_eval_activate_v3.sh
 ```
 
