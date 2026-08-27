@@ -15,7 +15,7 @@ The repository keeps the shared model code in one place and exposes each experim
 | CoNeTTE | Descriptive CoNeTTE captions | `run_conditioned_pipeline_conette.sh`, `inference_conette.py`, `eval/evaluation_v3.py` | `versions/conette` |
 | Flow Matching | Optimal-transport flow matching | `run_conditioned_pipeline_fm.sh`, `train_fm.py` | `versions/flow-matching` |
 
-There are exactly three maintained branches. `main` is the v2 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment.
+There are exactly three maintained branches. `main` is the v2 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment. Version-specific launchers, training modules, data modules, and evaluation entrypoints exist only on their corresponding branch. The `demo/` directory and `demo.ipynb` are preserved on all three branches.
 
 ## Repository layout
 
