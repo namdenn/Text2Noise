@@ -1,10 +1,10 @@
-# CoNeTTE Version
+# v2 — Default Version
 
-This branch uses descriptive CoNeTTE captions to condition the noise score model.
+`main` is the v2 branch. It uses stored 512-dimensional RoBERTa/AudioLDM-style text embeddings to condition the noise score model.
 
-- Text-to-Noise training: `run_conditioned_pipeline_conette.sh`
-- Text-to-Noise inference: `inference_conette.py`
-- Caption encoding: `sgmse/data_module_conette.py`
-- Speech Enhancement: `run_eval_activate_v3.sh` and `eval/evaluation_v3.py`
+- Text-to-Noise training: `run_conditioned_pipeline.sh`
+- Text-to-Noise inference: `inference.py`
+- Data preparation: `sgmse/data_module.py`
+- Speech Enhancement: `run_eval_activate.sh` and `eval/evaluation.py`
 
-Set `TEXT_ENCODER_CHECKPOINT`, `CONETTE_METADATA_DIR`, and `CONETTE_ENCODED_DIR` before training. Inference can use a free-form caption or an exact stored metadata embedding.
+Set `CORPUS_ROOT` and `TEXT_ENCODER_CHECKPOINT` before training. Inference must receive the encoded JSONL used by the selected checkpoint so it loads the exact training condition.
