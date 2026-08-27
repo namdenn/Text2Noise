@@ -40,7 +40,7 @@ def parse_args():
     parser.add_argument(
         "--ckpt_noise_path",
         required=True,
-        help="Text-conditioned noise checkpoint (v2 for this evaluation)",
+        help="Text-conditioned noise checkpoint for this evaluation",
     )
     parser.add_argument(
         "--metadata-jsonl",
@@ -57,7 +57,7 @@ def parse_args():
         default="separate_paradiffuseen",
         choices=("separate_paradiffuseen",),
     )
-    parser.add_argument("--tag", default="v2_text_noise_prior")
+    parser.add_argument("--tag", default="v1_text_noise_prior")
     parser.add_argument("--data_dir", required=True)
     parser.add_argument("--clean_root", required=True)
     parser.add_argument("--noisy_root", required=True)
@@ -67,7 +67,7 @@ def parse_args():
     parser.add_argument(
         "--prompt_template",
         default="This is {noise_type} noise",
-        help="Must match the caption style used to train v2",
+        help="Must match the caption style used to train the noise model",
     )
     parser.add_argument("--compute_metrics", action="store_true")
     parser.add_argument("--dnn_mos", action="store_true")
@@ -214,8 +214,8 @@ def evaluate(args):
     for path, label in (
         (args.data_dir, "evaluation JSON"),
         (args.ckpt_path, "speech checkpoint"),
-        (args.ckpt_noise_path, "v2 noise checkpoint"),
-        (args.metadata_jsonl, "encoded v2 metadata"),
+        (args.ckpt_noise_path, "noise checkpoint"),
+        (args.metadata_jsonl, "encoded noise metadata"),
     ):
         require_file(path, label)
 

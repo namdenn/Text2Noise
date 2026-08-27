@@ -109,12 +109,12 @@ if __name__ == "__main__":
         "--diffusion-checkpoint",
         default=os.environ.get(
             "DIFFUSION_CHECKPOINT",
-            "logs/v2_01_08_2026/last.ckpt",
+            "checkpoints/noise_model.ckpt",
         ),
     )
     parser.add_argument(
         "--output-dir",
-        default=os.environ.get("OUTPUT_DIR", "outputs/text_to_noise_v2"),
+        default=os.environ.get("OUTPUT_DIR", "outputs/noise_generation"),
     )
     parser.add_argument("--steps", type=int, default=50)
     parser.add_argument("--snr", type=float, default=0.1)

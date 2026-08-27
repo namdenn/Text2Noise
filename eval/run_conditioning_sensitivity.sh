@@ -21,7 +21,7 @@ cd "$PROJ_ROOT"
 #     export TORCH_CUDA_ARCH_LIST="8.0" 
 # fi
 
-CKPT_DIFFUSION="${CKPT_DIFFUSION:-$PROJ_ROOT/logs/v2_01_08_2026/last.ckpt}"
+CKPT_DIFFUSION="${CKPT_DIFFUSION:-$PROJ_ROOT/checkpoints/noise_model.ckpt}"
 CKPT_TEXT="${CKPT_TEXT:-$PROJ_ROOT/checkpoints/text_encoder_only.pt}"
 TEXT_MODEL_NAME_OR_PATH="${TEXT_MODEL_NAME_OR_PATH:-roberta-base}"
 OUTPUT_DIR="${OUTPUT_DIR:-./eval/result/conditioning_sensitivity}"

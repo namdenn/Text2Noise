@@ -14,18 +14,18 @@ SEGMENT="${1:--1}"
 TOTAL_SEGMENTS="${2:-1}"
 
 DATASET="${DATASET:-WSJ0}"
-DATA_DIR="${DATA_DIR:-$PROJ_ROOT/eval/ntcd_timit.json}"
-NOISY_ROOT="${NOISY_ROOT:?Set NOISY_ROOT to the noisy evaluation corpus directory}"
-CLEAN_ROOT="${CLEAN_ROOT:?Set CLEAN_ROOT to the clean evaluation corpus directory}"
+DATA_DIR="${DATA_DIR:-$PROJ_ROOT/eval/evaluation_manifest.json}"
+NOISY_ROOT="${NOISY_ROOT:?Set NOISY_ROOT to the noisy-audio directory}"
+CLEAN_ROOT="${CLEAN_ROOT:?Set CLEAN_ROOT to the clean-audio directory}"
 
 
 SPEECH_CKPT="${SPEECH_CKPT:?Set SPEECH_CKPT to the speech-prior checkpoint}"
-V2_NOISE_CKPT="${V2_NOISE_CKPT:-$PROJ_ROOT/logs/v2_01_08_2026/last.ckpt}"
-V2_METADATA="${V2_METADATA:-$PROJ_ROOT/sgmse/metadata_combination_encoded_audioldm_cpt/test.jsonl}"
+NOISE_CKPT="${NOISE_CKPT:-$PROJ_ROOT/checkpoints/noise_model.ckpt}"
+NOISE_METADATA="${NOISE_METADATA:-$PROJ_ROOT/generated/metadata/encoded/test.jsonl}"
 
 SAVE_ROOT="${SAVE_ROOT:-$PROJ_ROOT/eval/result}"
 ALGO_TYPE="separate_paradiffuseen"
-TAG="v2_01_08_2026"
+TAG="${TAG:-v1}"
 NUM_E=30
 NBATCH=4
 STARTSTEP=0
@@ -46,8 +46,8 @@ python eval/evaluation.py \
     --segment "$SEGMENT" \
     --num_segments "$TOTAL_SEGMENTS" \
     --ckpt_path "$SPEECH_CKPT" \
-    --ckpt_noise_path "$V2_NOISE_CKPT" \
-    --metadata-jsonl "$V2_METADATA" \
+    --ckpt_noise_path "$NOISE_CKPT" \
+    --metadata-jsonl "$NOISE_METADATA" \
     --algo_type "$ALGO_TYPE" \
     --tag "$TAG" \
     --data_dir "$DATA_DIR" \

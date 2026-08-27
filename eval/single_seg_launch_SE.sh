@@ -33,7 +33,7 @@ out_dir="${OUT_DIR:-OUT}"
 mkdir -p "$out_dir"
 
 job_command="bash '$project_root/eval/SE_eval.sh' '$seg_id' '$total_seg'"
-echo "Submitting v2 segment $seg_id/$total_seg"
+echo "Submitting v1 segment $seg_id/$total_seg"
 echo "Job command: $job_command"
 oarsub \
     -vv \

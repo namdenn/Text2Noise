@@ -3,10 +3,10 @@
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 CONDA_ENV_PATH="${CONDA_ENV_PATH:-diffuse}"
 PROJ_ROOT="${PROJ_ROOT:-$SCRIPT_DIR}"
-METADATA_DIR="$PROJ_ROOT/sgmse/metadata_combination_encoded_audioldm_cpt"
+METADATA_DIR="${METADATA_DIR:-$PROJ_ROOT/generated/metadata/encoded}"
 TRAIN_JSONL="$METADATA_DIR/train.jsonl"
 
-RUN_ID="v2_01_08_2026"
+RUN_ID="${RUN_ID:-v1}"
 CKPT_DIR="$PROJ_ROOT/logs/$RUN_ID"
 
 echo "--- Activating Environment ---"
