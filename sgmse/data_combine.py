@@ -13,7 +13,7 @@ folders = [
 splits = ['train', 'test', 'val']
 
 # 2. Create the destination directory
-output_dir = "metadata_combination"
+output_dir = "generated/metadata/raw"
 os.makedirs(output_dir, exist_ok=True)
 
 print(f"Starting merge into {output_dir}...")
