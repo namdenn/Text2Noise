@@ -126,8 +126,17 @@ For the speech-enhancement demo, download the [speech-model checkpoint](https://
 
 ## Acknowledgments
 
-The score-model implementation is adapted from [SGMSE](https://github.com/sp-uhh/sgmse). Parts of the speech-enhancement stack build on the referenced DiffUSE/UDiffSE research code, and the audio-visual utilities include AV-HuBERT/fairseq-derived components. See the source-file headers for method-specific papers and upstream attributions.
+This work was conducted at **Inria Nancy** within the **MULTISPEECH** team. I would like to extend my sincere gratitude to my supervisor, **Dr. Mostafa Sadeghi**, for his invaluable guidance, support, and mentorship throughout this project.
+
+Special thanks to the open-source communities behind the baseline architectures and utilities integrated into this repository:
+* **Score-based models:** Adapted from [SGMSE](https://github.com/sp-uhh/sgmse) and [enudiffuse](https://github.com/jeaneudesAyilo/enudiffuse).
+* **Speech enhancement stack:** Builds upon the referenced DiffUSE/UDiffSE frameworks.
+* **Audio-Visual components:** Utilizes components derived from [AV-HuBERT](https://github.com/facebookresearch/fairseq/tree/main/examples/av_hubert) / fairseq.
+
+---
 
 ## License
 
-No project-level license has been selected yet. Add a license before inviting reuse or redistribution, and verify the licenses of upstream code, datasets, checkpoints, and model weights separately.
+This project is released under the [MIT License](LICENSE). 
+
+> **Note:** Upstream codebases, pretrained checkpoints, and datasets incorporated or referenced in this repository maintain their respective original licenses (e.g., Fairseq, SGMSE). Please check upstream repository headers before commercial redistribution.
