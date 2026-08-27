@@ -118,9 +118,14 @@ TOTAL_SEGMENTS=10 bash run_eval_activate_conette.sh
 
 The `eval/launch_SE_ALL*.sh` and `eval/single_seg_launch_SE*.sh` scripts are optional Grid'5000/OAR launchers. The Python evaluation entrypoints can also be called directly; use `python eval/evaluation.py --help` or `python eval/evaluation_conette.py --help` for their full arguments.
 
-## Checkpoints and data
+## Checkpoints
 
-This repository does not distribute training datasets or noise-model checkpoints. Keep them outside Git and configure their locations with environment variables or command-line arguments. Generated artifacts and local configuration are ignored by Git.
+Select and download the appropriate checkpoint based on the dataset type:
+
+* **[v1-model Checkpoint](https://huggingface.co/nampt1602/Text2Noise/blob/main/original/last.ckpt)**
+  * **Description:** Original model trained on a dataset created with **manual text descriptions**.
+* **[v2-model (CoNeTTE) Checkpoint](https://huggingface.co/nampt1602/Text2Noise/blob/main/conette/last.ckpt)**
+  * **Description:** Updated model trained on a dataset generated automatically using **CoNeTTE**.
 
 For the speech-enhancement demo, download the [speech-model checkpoint](https://huggingface.co/jeaneudesAyilo/enudiffuse/blob/main/separate_wsjqut_speech_modeling.ckpt). That checkpoint comes from the [EnuDiffSE repository](https://github.com/jeaneudesAyilo/enudiffuse); please follow its setup, citation, and license information when using the model.
 
