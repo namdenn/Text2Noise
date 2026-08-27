@@ -32,6 +32,7 @@ OUT/
 # Datasets and generated metadata
 data/
 data_demo/
+generated/
 metadata/
 metadata_*/
 sgmse/metadata/

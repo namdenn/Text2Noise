@@ -271,21 +271,21 @@ class SpecsDataModule(pl.LightningDataModule):
     def test_dataloader(self): return DataLoader(self.test_set, batch_size=self.batch_size, num_workers=self.num_workers)
 
 if __name__ == "__main__":
-    CORPUS_ROOT = os.environ.get("CORPUS_ROOT", "data/text2noise")
+    DATA_ROOT = os.environ.get("DATA_ROOT", "data/source")
     
     noise_folders = ["babble", "car", "cafe", "street", "lr", "white"]
     
-    BASE_METADATA_DIR = "./metadata_individual"
-    COMBINED_RAW_DIR = "./metadata_combination"
-    COMBINED_ENCODED_DIR = "./metadata_combination_encoded_audioldm_cpt"
+    METADATA_PARTS_DIR = "generated/metadata/parts"
+    METADATA_RAW_DIR = "generated/metadata/raw"
+    METADATA_ENCODED_DIR = "generated/metadata/encoded"
     
     individual_train_paths = []
     individual_val_paths = []
     individual_test_paths = []
 
     for noise in noise_folders:
-        data_base_path = os.path.join(CORPUS_ROOT, noise)
-        output_dir = os.path.join(BASE_METADATA_DIR, f"metadata_{noise}")
+        data_base_path = os.path.join(DATA_ROOT, noise)
+        output_dir = os.path.join(METADATA_PARTS_DIR, noise)
         
         if not os.path.exists(data_base_path):
             print(f"Error: Core directory not found for {noise}, skipping...")
@@ -297,11 +297,11 @@ if __name__ == "__main__":
         individual_val_paths.append(os.path.join(output_dir, "val.jsonl"))
         individual_test_paths.append(os.path.join(output_dir, "test.jsonl"))
 
-    os.makedirs(COMBINED_RAW_DIR, exist_ok=True)
+    os.makedirs(METADATA_RAW_DIR, exist_ok=True)
     
-    combine_files(individual_train_paths, os.path.join(COMBINED_RAW_DIR, "train.jsonl"))
-    combine_files(individual_val_paths, os.path.join(COMBINED_RAW_DIR, "val.jsonl"))
-    combine_files(individual_test_paths, os.path.join(COMBINED_RAW_DIR, "test.jsonl"))
+    combine_files(individual_train_paths, os.path.join(METADATA_RAW_DIR, "train.jsonl"))
+    combine_files(individual_val_paths, os.path.join(METADATA_RAW_DIR, "val.jsonl"))
+    combine_files(individual_test_paths, os.path.join(METADATA_RAW_DIR, "test.jsonl"))
     
-    encode_metadata_offline(input_dir=COMBINED_RAW_DIR, output_dir=COMBINED_ENCODED_DIR)
+    encode_metadata_offline(input_dir=METADATA_RAW_DIR, output_dir=METADATA_ENCODED_DIR)
     

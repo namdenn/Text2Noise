@@ -345,16 +345,16 @@ if __name__ == "__main__":
     elif args.dataset in [ "WSJ0","WSJ0-DEMAND_-5_0_5", "VB"]:        
 
         if args.dataset =="WSJ0": ##WSJ0QUT
-            clean_root = args.clean_root or "/group_storage/source_separation/WSJ0_SE/wsj0_si_et_05"
-            noisy_root = args.noisy_root or "/group_storage/source_separation/QUT_WSJ0/test"
+            clean_root = args.clean_root or "data/clean_audio"
+            noisy_root = args.noisy_root or "data/noisy_audio"
 
         elif args.dataset == "WSJ0-DEMAND_-5_0_5":
-            clean_root = args.clean_root or "/group_storage/source_separation/WSJ0_SE/wsj0_si_et_05"
-            noisy_root = args.noisy_root or "/group_storage/source_separation/NEW_MIX/WSJ0_DEMAND/test_-5_0_5"
+            clean_root = args.clean_root or "data/clean_audio"
+            noisy_root = args.noisy_root or "data/noisy_audio"
 
         elif args.dataset == "VB":
-            clean_root = args.clean_root or "/group_storage/source_separation/VoiceBankDEMAND/clean_testset_wav_16k"
-            noisy_root = args.noisy_root or "/group_storage/source_separation/VoiceBankDEMAND/noisy_testset_wav_16k"
+            clean_root = args.clean_root or "data/clean_audio"
+            noisy_root = args.noisy_root or "data/noisy_audio"
 
         # Load file json
         with open(args.data_dir, "r") as f:

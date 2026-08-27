@@ -12,10 +12,10 @@ The repository keeps the shared model code in one place and exposes each experim
 | Version | Conditioning / method | Main entrypoints | Branch |
 | --- | --- | --- | --- |
 | v1 (default) | Stored text embeddings | `run_conditioned_pipeline.sh`, `inference.py`, `eval/evaluation.py` | `main` |
-| CoNeTTE | Descriptive CoNeTTE captions | `run_conditioned_pipeline_conette.sh`, `inference_conette.py`, `eval/evaluation_v3.py` | `versions/conette` |
+| CoNeTTE | Descriptive CoNeTTE captions | `run_conditioned_pipeline_conette.sh`, `inference_conette.py`, `eval/evaluation_conette.py` | `versions/conette` |
 | Flow Matching | Optimal-transport flow matching | `run_conditioned_pipeline_fm.sh`, `train_fm.py` | `versions/flow-matching` |
 
-There are exactly three maintained branches. `main` is the v1 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment. Version-specific launchers, training modules, data modules, and evaluation entrypoints exist only on their corresponding branch. The `demo/` directory and `demo.ipynb` are preserved on all three branches.
+There are exactly three maintained branches. `main` is the v1 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment. Version-specific launchers, training modules, data modules, and evaluation entrypoints exist only on their corresponding branch. The `demo/` directory and the speech-enhancement notebook are preserved on all three branches.
 
 ## Repository layout
 
@@ -28,7 +28,7 @@ There are exactly three maintained branches. `main` is the v1 implementation; th
 ├── sgmse/                     # Data, SDE, score-model, backbone, and AV utilities
 ├── src/                       # Speech/noise inference algorithms and metrics
 ├── demo/                      # Small generated audio examples
-├── demo.ipynb                 # End-to-end research demo
+├── demo.ipynb                 # Speech-enhancement demo
 └── requirements.txt
 ```
 
@@ -61,20 +61,18 @@ source .env
 
 The example file documents the values required by each launcher. Keep all machine-specific locations and credentials in the untracked `.env` file. Checkpoints and datasets remain external because they can be large and may have separate licenses.
 
-## Task 1: Text-to-Noise
+## Demos
 
-The default `main` branch is v1:
+There are two separate demos:
 
-```bash
-git switch main
-bash run_conditioned_pipeline.sh
-```
+1. **Noise generation:** use the inference script provided by the selected branch. On `main`, run `inference.py`; on `versions/conette`, run `inference_conette.py`. The flow-matching branch contains its training implementation but no separate inference script.
+2. **Speech enhancement:** use `demo.ipynb`. The notebook combines a speech-prior checkpoint with a branch-compatible noise checkpoint to separate a noisy mixture into speech and noise.
 
-Generate audio with the v1 model using neutral local path variables:
+The following example runs the v1 noise-generation demo without placing local paths in the repository:
 
 ```bash
 PATH_TEST="<metadata-file>"
-PATH_CHECKPOINT="<checkpoint-file>"
+PATH_CHECKPOINT="<noise-checkpoint-file>"
 PATH_OUTPUT="<output-directory>"
 
 python inference.py \
@@ -84,7 +82,22 @@ python inference.py \
   --output-dir "$PATH_OUTPUT"
 ```
 
-For the caption-conditioned model, switch to `versions/conette` and use `inference_conette.py` with a descriptive caption. The `versions/flow-matching` branch provides the flow-matching training path; it does not introduce a separate inference entrypoint.
+For speech enhancement, start Jupyter, open `demo.ipynb`, and set its neutral configuration values to files on your machine:
+
+```bash
+jupyter notebook demo.ipynb
+```
+
+## Task 1: Text-to-Noise
+
+The default `main` branch is v1:
+
+```bash
+git switch main
+bash run_conditioned_pipeline.sh
+```
+
+For generation, use the noise-generation demo above. The stored-embedding model requires metadata created for the same checkpoint. The CoNeTTE model instead accepts a descriptive caption.
 
 ## Task 2: Speech Enhancement
 
@@ -101,14 +114,16 @@ Run CoNeTTE-based speech enhancement from its model branch:
 
 ```bash
 git switch versions/conette
-TOTAL_SEGMENTS=10 bash run_eval_activate_v3.sh
+TOTAL_SEGMENTS=10 bash run_eval_activate_conette.sh
 ```
 
-The `eval/launch_SE_ALL*.sh` and `eval/single_seg_launch_SE*.sh` scripts are optional Grid'5000/OAR launchers. The Python evaluation entrypoints can also be called directly; use `python eval/evaluation.py --help` or `python eval/evaluation_v3.py --help` for their full arguments.
+The `eval/launch_SE_ALL*.sh` and `eval/single_seg_launch_SE*.sh` scripts are optional Grid'5000/OAR launchers. The Python evaluation entrypoints can also be called directly; use `python eval/evaluation.py --help` or `python eval/evaluation_conette.py --help` for their full arguments.
 
 ## Checkpoints and data
 
-This repository does not distribute training datasets or model checkpoints. Keep them outside Git and configure their locations with environment variables or command-line arguments. Generated artifacts and local configuration are ignored by Git.
+This repository does not distribute training datasets or noise-model checkpoints. Keep them outside Git and configure their locations with environment variables or command-line arguments. Generated artifacts and local configuration are ignored by Git.
+
+For the speech-enhancement demo, download the [speech-model checkpoint](https://huggingface.co/jeaneudesAyilo/enudiffuse/blob/main/separate_wsjqut_speech_modeling.ckpt). That checkpoint comes from the [EnuDiffSE repository](https://github.com/jeaneudesAyilo/enudiffuse); please follow its setup, citation, and license information when using the model.
 
 ## Acknowledgments
 

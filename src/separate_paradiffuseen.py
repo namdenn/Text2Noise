@@ -84,7 +84,7 @@ def _prepare_legacy_speech_checkpoint(checkpoint_path):
     # EMA only from the temporary copy makes ScoreModel use regular weights.
     checkpoint.pop("ema", None)
     handle, temporary_path = tempfile.mkstemp(
-        prefix="audio2noise_legacy_speech_",
+        prefix="speech_checkpoint_compat_",
         suffix=".ckpt",
     )
     os.close(handle)
