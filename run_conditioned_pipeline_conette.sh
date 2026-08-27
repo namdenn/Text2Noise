@@ -62,7 +62,7 @@ python train.py \
     --accelerator gpu \
     --devices 2 \
     --max_epochs 200 \
-    --wandb_project "se-smd" \
+    --wandb_project "${WANDB_PROJECT:-audio-modeling}" \
     --run_id "$RUN_ID" \
     --resume_from_checkpoint "$RESUME_PATH"
 
