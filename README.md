@@ -5,17 +5,17 @@ Research code for two related audio tasks:
 1. **Text-to-Noise** — train conditional score or flow-matching models and generate noise from class labels or free-form captions.
 2. **Speech Enhancement** — separate speech and noise from a noisy mixture using a speech prior together with one of the trained noise priors.
 
-The repository keeps the shared model code in one place and exposes each experimental version through a dedicated Git branch. Model checkpoints, corpora, generated results, and account credentials are intentionally not included.
+The repository keeps the shared model code in one place and exposes each experimental version through a dedicated Git branch. Model checkpoints, datasets, generated results, and account credentials are intentionally not included.
 
 ## Version branches
 
 | Version | Conditioning / method | Main entrypoints | Branch |
 | --- | --- | --- | --- |
-| v2 (default) | RoBERTa/AudioLDM text embeddings | `run_conditioned_pipeline.sh`, `inference.py`, `eval/evaluation.py` | `main` |
+| v1 (default) | Stored text embeddings | `run_conditioned_pipeline.sh`, `inference.py`, `eval/evaluation.py` | `main` |
 | CoNeTTE | Descriptive CoNeTTE captions | `run_conditioned_pipeline_conette.sh`, `inference_conette.py`, `eval/evaluation_v3.py` | `versions/conette` |
 | Flow Matching | Optimal-transport flow matching | `run_conditioned_pipeline_fm.sh`, `train_fm.py` | `versions/flow-matching` |
 
-There are exactly three maintained branches. `main` is the v2 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment. Version-specific launchers, training modules, data modules, and evaluation entrypoints exist only on their corresponding branch. The `demo/` directory and `demo.ipynb` are preserved on all three branches.
+There are exactly three maintained branches. `main` is the v1 implementation; the other two branches retain the shared source code and add a `VERSION.md` guide for their selected experiment. Version-specific launchers, training modules, data modules, and evaluation entrypoints exist only on their corresponding branch. The `demo/` directory and `demo.ipynb` are preserved on all three branches.
 
 ## Repository layout
 
@@ -39,8 +39,8 @@ Generated metadata, checkpoints, logs, cluster output, caches, and evaluation re
 Python 3.10 is recommended. Create an isolated environment and install the captured research dependencies:
 
 ```bash
-git clone https://github.com/namdenn/Text2Noise.git
-cd Text2Noise
+git clone <repository-url>
+cd <repository-directory>
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
@@ -59,60 +59,38 @@ cp .env.example .env
 source .env
 ```
 
-Important variables are:
-
-- `CONDA_INIT` and `CONDA_ENV_PATH` for shell launchers that use Conda.
-- `CORPUS_ROOT` for the Text-to-Noise corpus.
-- `TEXT_ENCODER_CHECKPOINT` for v2 and CoNeTTE text conditioning.
-- `SPEECH_CKPT`, `NOISY_ROOT`, and `CLEAN_ROOT` for speech enhancement.
-- `WANDB_API_KEY` for online experiment logging. Set it only in your shell or `.env`; never place it in a tracked script.
-
-All scripts default to the repository directory for `PROJ_ROOT`. Checkpoints and datasets remain external because they can be large and may have separate licenses.
+The example file documents the values required by each launcher. Keep all machine-specific locations and credentials in the untracked `.env` file. Checkpoints and datasets remain external because they can be large and may have separate licenses.
 
 ## Task 1: Text-to-Noise
 
-Expected corpus layout for the class-conditioned versions:
-
-```text
-$CORPUS_ROOT/
-├── babble/{train,val,test}/**/*.wav
-├── car/{train,val,test}/**/*.wav
-├── cafe/{train,val,test}/**/*.wav
-├── street/{train,val,test}/**/*.wav
-├── lr/{train,val,test}/**/*.wav
-└── white/{train,val,test}/**/*.wav
-```
-
-The default `main` branch is v2:
+The default `main` branch is v1:
 
 ```bash
 git switch main
 bash run_conditioned_pipeline.sh
 ```
 
-Generate audio with the v2 model using the exact encoded metadata used during training:
+Generate audio with the v1 model using neutral local path variables:
 
 ```bash
+PATH_TEST="<metadata-file>"
+PATH_CHECKPOINT="<checkpoint-file>"
+PATH_OUTPUT="<output-directory>"
+
 python inference.py \
-  --prompt "This is street noise" \
-  --metadata-jsonl sgmse/metadata_combination_encoded_audioldm_cpt/test.jsonl \
-  --diffusion-checkpoint logs/v2_01_08_2026/last.ckpt \
-  --output-dir outputs/text_to_noise_v2
+  --prompt "<text-prompt>" \
+  --metadata-jsonl "$PATH_TEST" \
+  --diffusion-checkpoint "$PATH_CHECKPOINT" \
+  --output-dir "$PATH_OUTPUT"
 ```
 
 For the caption-conditioned model, switch to `versions/conette` and use `inference_conette.py` with a descriptive caption. The `versions/flow-matching` branch provides the flow-matching training path; it does not introduce a separate inference entrypoint.
 
 ## Task 2: Speech Enhancement
 
-Speech enhancement combines an external speech-prior checkpoint with a Text-to-Noise checkpoint. Configure the corpus and checkpoint locations first:
+Speech enhancement combines an external speech-prior checkpoint with a Text-to-Noise checkpoint. Configure the required local values in `.env` and load it before running a launcher.
 
-```bash
-export SPEECH_CKPT=/path/to/speech_prior.ckpt
-export NOISY_ROOT=/path/to/noisy_eval_corpus
-export CLEAN_ROOT=/path/to/clean_eval_corpus
-```
-
-Run v2 locally in ten segments:
+Run v1 locally in ten segments:
 
 ```bash
 git switch main
@@ -130,7 +108,7 @@ The `eval/launch_SE_ALL*.sh` and `eval/single_seg_launch_SE*.sh` scripts are opt
 
 ## Checkpoints and data
 
-This repository does not distribute training corpora or model checkpoints. Keep them outside Git and configure their paths with environment variables or command-line arguments. Common local destinations such as `checkpoints/`, `data/`, `logs/`, `outputs/`, and generated metadata folders are ignored.
+This repository does not distribute training datasets or model checkpoints. Keep them outside Git and configure their locations with environment variables or command-line arguments. Generated artifacts and local configuration are ignored by Git.
 
 ## Acknowledgments
 
